@@ -11,6 +11,8 @@ from django.shortcuts import get_object_or_404
 # Create your views here.
 
 def admin(request):
+    if not request.user.role == 'admin' or not request.user.is_superuser:
+        return redirect('admin_login')
     tasks=Task.objects.all()
     try:
         admin_users=AssignedUsers.objects.get(admin=request.user).users.all()
@@ -22,6 +24,8 @@ def admin(request):
 
 
 def super_admin(request):
+    if not request.user.is_superuser:
+        return redirect('admin_login')
     admin_users=Profile.objects.filter(role=RoleChoices.ADMIN)
     return render(request,'super_admin_dashboard.html',{'admin_users':admin_users})
 
@@ -51,6 +55,8 @@ def admin_logout(request):
 
 
 def assign_users(request,admin_id):
+    if not request.user.is_superuser:
+        return redirect('admin_login')
     users=Profile.objects.filter(role=RoleChoices.USER)
     if request.method == 'POST':
         data=request.POST.get('selected_users')
@@ -89,6 +95,8 @@ def list_users(request):
 
 
 def add_user(request):
+    if not request.user.is_superuser:
+        return redirect('admin_login')
     if request.method == 'POST':
         data=request.POST.copy()
         data['role']=RoleChoices.USER
@@ -102,6 +110,8 @@ def add_user(request):
 
 
 def view_user(request,user_id):
+    if not request.user.is_superuser:
+        return redirect('admin_login')
     user=Profile.objects.get(id=user_id)
     return render(request,'view_user.html',{'user':user})
 

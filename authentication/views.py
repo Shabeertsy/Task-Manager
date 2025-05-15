@@ -13,6 +13,8 @@ class LoginAPIView(APIView):
         if not username or not password:
             return Response({"detail": "Username and password are required."}, status=status.HTTP_400_BAD_REQUEST)
         user = authenticate(username=username, password=password)
+        if user.role == 'Admin' or  user.is_superuser:
+            return Response({"detail": "You are not authorized to access this resource."}, status=status.HTTP_403_FORBIDDEN)
 
         if user is not None:
             refresh = RefreshToken.for_user(user)

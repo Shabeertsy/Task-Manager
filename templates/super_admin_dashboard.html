@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Super Admin Dashboard</title>
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+    <style>
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 2rem;
+            background: #fff;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .admin-table th, .admin-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        .admin-table th {
+            background-color: #f4f6f9;
+            color: #333;
+        }
+        .admin-table td form {
+            display: inline;
+        }
+        .admin-table button {
+            padding: 0.4rem 0.8rem;
+            margin: 0.2rem 0.3rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        .btn-update { background-color: #007bff; color: white; }
+        .btn-demote { background-color: #dc3545; color: white; }
+        .btn-delete { background-color: #6c757d; color: white; }
+        .btn-promote { background-color: #28a745; color: white; }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .card {
+            background: #fff;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+
+        .card h2 {
+            margin-top: 0;
+        }
+
+        .card a {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 0.5rem 1rem;
+            background-color: #007bff;
+            color: #fff;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .card a:hover {
+            background-color: #0056b3;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 2rem;
+        }
+
+        .top-bar h2 {
+            margin: 0;
+        }
+
+        .btn-create {
+            padding: 0.5rem 1rem;
+            background-color: #17a2b8;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .btn-create:hover {
+            background-color: #117a8b;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Super Admin Dashboard</h1>
+        <nav>
+            <ul>
+                <li><a href="{% url 'admin_logout' %}">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main style='min-height:71vh'>
+        <section class="card-grid">
+            <div class="card">
+                <h2>Manage Users</h2>
+                <p>View and control registered users.</p>
+                <a href="{% url 'list_users' %}">View All Users</a>
+            </div>
+
+            <div class="card">
+                <h2>Admin</h2>
+                <p>Want access admin ?</p>
+                <a href="{% url 'admin_dashboard' %}">Go to admin</a>
+
+            </div>
+        </section>
+
+        <!-- Admins Table -->
+        <section>
+            <div class="top-bar">
+                <h2>All Admin Users</h2>
+                <form action="{% url 'create_admin' %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-create">Create New Admin</button>
+                </form>
+            </div>
+
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Username</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Role</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for admin in admin_users %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ admin.username }}</td>
+                        <td>{{ admin.first_name }}</td>
+                        <td>{{ admin.last_name }}</td>
+                        
+                        <td>{{ admin.role }}</td>
+                        <td>
+                            <form action="{% url 'update_admin' admin.id %}" method="get">
+                                {% csrf_token %}
+                                <button type="submit" class="btn-update">Update</button>
+                            </form>
+                            <form action="{% url 'demote_user' admin.id %}" method="post">
+                                {% csrf_token %}
+                                <button type="submit" class="btn-demote">Demote</button>
+                            </form>
+                            <form action="{% url 'delete_admin' admin.id %}" method="post">
+                                {% csrf_token %}
+                                <button type="submit" class="btn-delete">Delete</button>
+                            </form>
+                          
+                            <form action="{% url 'assign_users' admin.id %}" method="get">
+                                {% csrf_token %}
+                                <button type="submit" class="btn-promote">Assign Users</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="5">No admin users found.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Task Manager. All rights reserved.</p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,62 @@
+# Python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Django stuff:
+*.log
+*.pot
+*.pyc
+*.pyo
+*.db
+*.sqlite3
+db.sqlite3
+.env
+.env.*
+venv/
+ENV/
+env/
+*.pem
+
+# Media and static file collections
+/media
+/staticfiles
+
+# VS Code
+.vscode/
+
+# PyCharm
+.idea/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# pip
+pip-log.txt
+
+# Test and coverage
+htmlcov/
+.tox/
+.nox/
+.coverage
+coverage.xml
+*.cover
+.cache
+.pytest_cache/
+
+# Migrations (optional — keep if you want to track them)
+**/migrations/*.pyc
+**/migrations/__pycache__/
+# Uncomment below to ignore migration files completely
+# **/migrations/*.py
+
+# Node modules (if using npm/webpack in the project)
+node_modules/
+
+# MyPy
+.mypy_cache/
+.dmypy.json
+
+# Local settings
+local_settings.py
